@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import Dict, Any, List
 from app.services.email_topic_inference import EmailTopicInferenceService
+from app.features.factory import GENERATORS
 from app.dataclasses import Email
 
 router = APIRouter()
@@ -47,6 +48,20 @@ async def topics():
     inference_service = EmailTopicInferenceService()
     info = inference_service.get_pipeline_info()
     return {"topics": info["available_topics"]}
+    
+@router.get("/features")
+async def features():
+    """Get available feature generators and their feature names"""
+    try:
+        available = []
+        for name, generator_class in GENERATORS.items():
+            gen = generator_class()
+            available.append(
+                {"name": name, "features": gen.feature_names}
+                )
+        return {"available_generators": available}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/pipeline/info") 
 async def pipeline_info():
