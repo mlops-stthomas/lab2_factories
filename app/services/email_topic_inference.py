@@ -35,3 +35,10 @@ class EmailTopicInferenceService:
             "available_topics": self.model.topics,
             "topics_with_descriptions": self.model.get_all_topics_with_descriptions()
         }
+        
+    def create_topic(self, topic_with_descriptions) -> Dict[str, Any]:
+        # grab topic and description
+        # insert them into the topic keywords.json file
+        # return a success code with the newly added topic and description
+        topic, description = topic_with_descriptions[]
+        

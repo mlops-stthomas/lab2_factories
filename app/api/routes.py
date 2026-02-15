@@ -52,6 +52,18 @@ async def topics():
 async def pipeline_info():
     inference_service = EmailTopicInferenceService()
     return inference_service.get_pipeline_info()
+    
+@router.post("/topic/")
+async def add_topic():
+    try:
+        inference_service = EmailTopicInferenceService()
+        # double check what the request sends to separate the topic and description
+        topic_with_description = {request.subject: request.body}
+        result = inference_service.create_topic(topic_with_description)
+        
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 # TODO: LAB ASSIGNMENT - Part 2 of 2  
 # Create a GET endpoint at "/features" that returns information about all feature generators
